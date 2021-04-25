@@ -1,18 +1,22 @@
 package servicio;
+import reparaFix.Oficio;
 
 public abstract class Servicio {
-	Float precio=0f;
-	Boolean urgente=false;
-	TipoServicio tipo=TipoServicio.INSTALACION;
+	private Boolean urgencia=false;
+	private Oficio oficio;
 	
-	
-	//TODO
-	//Oficio al que pertenece
-	//Funciones
-	public Float getPrecio() {
-		if(urgente) return precio*1.5f;
-		else return precio;
+	public Boolean getUrgencia() {
+		return urgencia;
+	}
+	public Oficio getOficio() {
+		return oficio;
+	}
+	public void setUrgencia(Boolean b) {
+		urgencia=b;
+	}
+	public void setOficio(Oficio o) {
+		oficio=o;
 	}
 	
-	
+	public abstract Float calcularCosto() throws Exception;
 }
