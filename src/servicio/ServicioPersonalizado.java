@@ -1,6 +1,8 @@
 package servicio;
 import reparaFix.Oficio;
 import excepciones.ServicioPersonalizadoSinDatosException;
+import usuario.Usuario;
+import java.util.Calendar;
 
 public class ServicioPersonalizado extends Servicio {
 	private Float costoPresupuesto=-1.0f;
@@ -10,34 +12,29 @@ public class ServicioPersonalizado extends Servicio {
 	
 	@Override
 	public Float calcularCosto() throws ServicioPersonalizadoSinDatosException {
-		if(	costoPresupuesto==-1.0f ||
-			costoMateriales==-1.0f ||
-			costoTransporte==-1.0f) {
-			//NO INICIALIZO VARIABLES
-			throw new ServicioPersonalizadoSinDatosException(
-					costoPresupuesto,
-					costoMateriales,
-					costoTransporte);
-		}
 		
-		Float total= costoPresupuesto + costoMateriales + costoTransporte;
-		if(super.getUrgencia()) return total*1.5f;
-		else return total;
+		Float total= this.getCostoPresupuesto() + this.getCostoMateriales() + this.getCostoTransporte();
+		if(super.getUrgencia()) total*=1.5f;
+		total+= super.getTrabajador().getComision() * total;
+		return total;
 	}
-	
-	public ServicioPersonalizado(Oficio o, Boolean urg, Float cp, Float cm, Float ct) {
-		super.setOficio(o);
-		super.setUrgencia(urg);
+	//CONSTRUCTOR
+	public ServicioPersonalizado(Boolean urg, Oficio o, Usuario u, Calendar f, Float cp, Float cm, Float ct) {
+		super(urg, o, u, f);
 		costoPresupuesto=cp;
 		costoMateriales=cm;
 		costoTransporte=ct;
 	}
-	public ServicioPersonalizado(Oficio o, Boolean urg) {
-		super.setOficio(o);
-		super.setUrgencia(urg);
+	public ServicioPersonalizado(Boolean urg, Oficio o, Usuario u, Calendar f) {
+		super(urg, o, u, f);
 	}
-	
-	public Float getCostoPresupuesto() {
+	//CONSTRUCTOR
+	public Float getCostoPresupuesto() throws ServicioPersonalizadoSinDatosException {
+		if(costoPresupuesto==-1.0f) 
+			throw new ServicioPersonalizadoSinDatosException(
+					costoPresupuesto,
+					costoMateriales,
+					costoTransporte);
 		return costoPresupuesto;
 	}
 
@@ -45,7 +42,12 @@ public class ServicioPersonalizado extends Servicio {
 		this.costoPresupuesto = costoPresupuesto;
 	}
 
-	public Float getCostoMateriales() {
+	public Float getCostoMateriales() throws ServicioPersonalizadoSinDatosException {
+		if(costoMateriales==-1.0f) 
+			throw new ServicioPersonalizadoSinDatosException(
+					costoPresupuesto,
+					costoMateriales,
+					costoTransporte);
 		return costoMateriales;
 	}
 
@@ -53,7 +55,12 @@ public class ServicioPersonalizado extends Servicio {
 		this.costoMateriales = costoMateriales;
 	}
 
-	public Float getCostoTransporte() {
+	public Float getCostoTransporte() throws ServicioPersonalizadoSinDatosException {
+		if(costoMateriales==-1.0f) 
+			throw new ServicioPersonalizadoSinDatosException(
+					costoPresupuesto,
+					costoMateriales,
+					costoTransporte);
 		return costoTransporte;
 	}
 

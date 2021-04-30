@@ -1,35 +1,35 @@
 package servicio;
-import servicio.TipoServicioEstandar;
 import reparaFix.Oficio;
+import usuario.Usuario;
+import java.util.Calendar;
 
-public class ServicioEstandar extends Servicio {
+
+public class ServicioEstandar extends Servicio{
 	TipoServicioEstandar tipo;
 	
 	@Override
-	public Float calcularCosto() {
+	public Float calcularCosto() throws RuntimeException{
 		Float precioTotal=0.0f;
 		switch(tipo) {
 		case INSTALACION:
-			//TODO
-			//PRECIO INSTALACION
 			precioTotal=150.0f;
+			break;
 		case REPARACION:
-			//PRECIO REPARACION
-			precioTotal=200.0f;;
+			precioTotal=200.0f;
+			break;
 		case MANTENIMIENTO:
-			//PRECIO MANTENIMIENTO
 			precioTotal=120.0f;
+			break;
 		default:
-			//NO DEBERIA ENTRAR NUNCA POR ACA
-			precioTotal=-1.0f;
+			throw new RuntimeException("Tipo de servicio estándar inválido");
 		}
-		if(super.getUrgencia()) return precioTotal * 1.5f;
-		else return precioTotal;
+		if(super.getUrgencia()) precioTotal *= 1.5f;
+		precioTotal+= super.getTrabajador().getComision() * precioTotal;
+		return precioTotal;
 	}
 	
-	public ServicioEstandar(Oficio o, Boolean urg, TipoServicioEstandar t) {
-		super.setOficio(o);
-		super.setUrgencia(urg);
+	public ServicioEstandar(Boolean urg, Oficio o, Usuario u, Calendar f, TipoServicioEstandar t) {
+		super(urg, o, u, f);
 		tipo=t;
 	}
 	
